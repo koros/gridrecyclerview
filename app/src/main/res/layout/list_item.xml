@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/headerText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Header"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/listItemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/itemContainer"
+            android:tag="1"
+            android:orientation="vertical"
+            android:layout_width="0dip"
+            android:layout_weight="0.33"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp">
+
+            <TextView
+                android:id="@+id/itemHeaderText"
+                android:tag="header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:text="Header 1"/>
+
+            <TextView
+                android:id="@+id/itemSubHeaderText"
+                android:tag="subHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="Header 2"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/itemContainer2"
+            android:tag="2"
+            android:orientation="vertical"
+            android:layout_width="0dip"
+            android:layout_weight="0.33"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp">
+
+            <TextView
+                android:id="@+id/itemHeaderText2"
+                android:tag="header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:text="Header 1"/>
+
+            <TextView
+                android:id="@+id/itemSubHeaderText2"
+                android:tag="subHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="Header 2"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/itemContainer3"
+            android:tag="3"
+            android:orientation="vertical"
+            android:layout_width="0dip"
+            android:layout_weight="0.33"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp">
+
+            <TextView
+                android:id="@+id/itemHeaderText3"
+                android:tag="header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:text="Header 1"/>
+
+            <TextView
+                android:id="@+id/itemSubHeaderText3"
+                android:tag="subHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="Header 2"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
