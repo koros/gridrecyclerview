@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.korosmatick.gridviewexample.R;
 import com.korosmatick.gridviewexample.models.GenericModel;
@@ -28,12 +30,14 @@ public class FruitsAdapter extends ArrayAdapter<Map<String, List<Object>>>{
     private Map<String, String> itemTypePositionsMap = new LinkedHashMap<String, String>();
     private Map<String, Integer> offsetForItemTypeMap = new LinkedHashMap<String, Integer>();
     LayoutInflater layoutInflater;
+    View.OnClickListener mItemClickListener;
 
-    public FruitsAdapter(Context context, int textViewResourceId, List<Map<String, List<Object>>> items, int numberOfCols){
+    public FruitsAdapter(Context context, int textViewResourceId, List<Map<String, List<Object>>> items, int numberOfCols, View.OnClickListener mItemClickListener){
         super(context, textViewResourceId, items);
         this.items = items;
         this.numberOfCols = numberOfCols;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mItemClickListener = mItemClickListener;
     }
 
     @Override
@@ -43,6 +47,10 @@ public class FruitsAdapter extends ArrayAdapter<Map<String, List<Object>>>{
         if(isHeaderPosition(position)){
             View v = convertView.findViewById(R.id.listItemLayout);
             v.setVisibility(View.GONE);
+
+            TextView headerText = (TextView)convertView.findViewById(R.id.headerText);
+            String section = getItemTypeAtPosition(position);
+            headerText.setText(getHeaderForSection(section));
             return convertView;
         }
 
@@ -54,19 +62,32 @@ public class FruitsAdapter extends ArrayAdapter<Map<String, List<Object>>>{
         List<Object> list = map.get(getItemTypeAtPosition(position));
 
         for (int i = 0; i <= numberOfCols; i++){
-            FrameLayout cont = (FrameLayout)convertView.findViewWithTag(String.valueOf(i+1));
+            FrameLayout grid = (FrameLayout)convertView.findViewWithTag(String.valueOf(i+1));
+            ImageView imageView;
             if (i < list.size()){
                 GenericModel model = (GenericModel)list.get(i);
-                if (cont != null){
-                    cont.setBackgroundResource(model.getImageResource());
+                if (grid != null){
+                    imageView = (ImageView)grid.findViewWithTag("image");
+                    imageView.setBackgroundResource(model.getImageResource());
+
+                    TextView textView = (TextView)grid.findViewWithTag("subHeader");
+                    textView.setText(model.getHeader());
+
+                    grid.setTag(R.id.row, position);
+                    grid.setTag(R.id.col, i);
+                    grid.setOnClickListener(mItemClickListener);
                 }
             }else{
-                if (cont != null){
-                    cont.setVisibility(View.INVISIBLE);
+                if (grid != null){
+                    grid.setVisibility(View.INVISIBLE);
                 }
             }
 
         }
+
+        //set hooks for click listener
+
+
         return convertView;
     }
 
@@ -84,8 +105,9 @@ public class FruitsAdapter extends ArrayAdapter<Map<String, List<Object>>>{
                 if (rows > 0){
                     headerPositions.add(String.valueOf(totalItems));
                     offsetForItemTypeMap.put(key, totalItems);
-                    totalItems += 1; // header view takes up one position
+
                     itemTypePositionsMap.put(key, totalItems + "," + (totalItems + rows) );
+                    totalItems += 1; // header view takes up one position
                 }
                 totalItems+= rows;
             }
@@ -141,6 +163,17 @@ public class FruitsAdapter extends ArrayAdapter<Map<String, List<Object>>>{
 
     public boolean isHeaderPosition(int position){
         return headerPositions.contains(String.valueOf(position));
+    }
+
+    private String getHeaderForSection(String section){
+        if (section.equalsIgnoreCase("Banana")){
+            return "Bananas";
+        }else if (section.equalsIgnoreCase("Pineapple")){
+            return "Pineapples";
+        }else if (section.equalsIgnoreCase("Orange")){
+            return "Oranges";
+        }
+        return "";
     }
 
 }

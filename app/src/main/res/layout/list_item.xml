@@ -8,6 +8,8 @@
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -30,12 +32,19 @@
             android:orientation="vertical"
             android:layout_width="0dip"
             android:layout_weight="0.33"
-            android:layout_height="wrap_content"
+            android:layout_height="190dp"
             android:layout_margin="2dp">
+
+            <ImageView
+                android:tag="image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/itemHeaderText"
                 android:tag="header"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -47,6 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:background="#88000000"
+                android:textColor="#fff"
                 android:text="Header 2"/>
 
         </FrameLayout>
@@ -57,12 +68,19 @@
             android:orientation="vertical"
             android:layout_width="0dip"
             android:layout_weight="0.33"
-            android:layout_height="wrap_content"
+            android:layout_height="190dp"
             android:layout_margin="2dp">
+
+            <ImageView
+                android:tag="image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/itemHeaderText2"
                 android:tag="header"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -74,6 +92,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:background="#88000000"
+                android:textColor="#fff"
                 android:text="Header 2"/>
 
         </FrameLayout>
@@ -84,12 +104,19 @@
             android:orientation="vertical"
             android:layout_width="0dip"
             android:layout_weight="0.33"
-            android:layout_height="wrap_content"
+            android:layout_height="190dp"
             android:layout_margin="2dp">
+
+            <ImageView
+                android:tag="image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/itemHeaderText3"
                 android:tag="header"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -101,6 +128,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:background="#88000000"
+                android:textColor="#fff"
                 android:text="Header 2"/>
 
         </FrameLayout>
