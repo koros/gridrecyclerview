@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.korosmatick.gridviewexample.R;
@@ -22,73 +24,71 @@ import java.util.Set;
 /**
  * Created by Geoffrey Koros on 9/4/2015.
  */
-public class FruitsAdapter extends ArrayAdapter<Map<String, List<Object>>>{
+public class GenericModelAdapter extends ArrayAdapter<Map<String, List<Object>>>{
 
     List<Map<String, List<Object>>> items = new ArrayList<Map<String, List<Object>>>();
-    private int numberOfCols;
-    private List<String> headerPositions = new ArrayList<String>();
-    private Map<String, String> itemTypePositionsMap = new LinkedHashMap<String, String>();
-    private Map<String, Integer> offsetForItemTypeMap = new LinkedHashMap<String, Integer>();
+    int numberOfCols;
+    List<String> headerPositions = new ArrayList<String>();
+    Map<String, String> itemTypePositionsMap = new LinkedHashMap<String, String>();
+    Map<String, Integer> offsetForItemTypeMap = new LinkedHashMap<String, Integer>();
     LayoutInflater layoutInflater;
     View.OnClickListener mItemClickListener;
+    Map<String, String> sectionHeaderTitles;
 
-    public FruitsAdapter(Context context, int textViewResourceId, List<Map<String, List<Object>>> items, int numberOfCols, View.OnClickListener mItemClickListener){
+    public GenericModelAdapter(Context context, int textViewResourceId, List<Map<String, List<Object>>> items, int numberOfCols, View.OnClickListener mItemClickListener){
+        this(context, textViewResourceId, items, null, numberOfCols, mItemClickListener);
+    }
+
+    public GenericModelAdapter(Context context, int textViewResourceId, List<Map<String, List<Object>>> items, Map<String, String> sectionHeaderTitles, int numberOfCols, View.OnClickListener mItemClickListener){
         super(context, textViewResourceId, items);
         this.items = items;
         this.numberOfCols = numberOfCols;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mItemClickListener = mItemClickListener;
+        this.sectionHeaderTitles = sectionHeaderTitles;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = layoutInflater.inflate(R.layout.list_item, null);
 
         if(isHeaderPosition(position)){
-            View v = convertView.findViewById(R.id.listItemLayout);
-            v.setVisibility(View.GONE);
+            convertView = layoutInflater.inflate(R.layout.grid_header_view, null);
 
             TextView headerText = (TextView)convertView.findViewById(R.id.headerText);
             String section = getItemTypeAtPosition(position);
             headerText.setText(getHeaderForSection(section));
             return convertView;
-        }
+        }else{
+            LinearLayout row = (LinearLayout)layoutInflater.inflate(R.layout.row_item, null);
+            Map<String, List<Object>> map = getItem(position);
+            List<Object> list = map.get(getItemTypeAtPosition(position));
 
-        //hide the header
-        View v = convertView.findViewById(R.id.headerLayout);
-        v.setVisibility(View.GONE);
+            for (int i = 0; i < numberOfCols; i++){
+                FrameLayout grid = (FrameLayout)layoutInflater.inflate(R.layout.grid_item, row, false);
+                ImageView imageView;
+                if (i < list.size()){
+                    GenericModel model = (GenericModel)list.get(i);
+                    if (grid != null){
+                        imageView = (ImageView)grid.findViewWithTag("image");
+                        imageView.setBackgroundResource(model.getImageResource());
 
-        Map<String, List<Object>> map = getItem(position);
-        List<Object> list = map.get(getItemTypeAtPosition(position));
+                        TextView textView = (TextView)grid.findViewWithTag("subHeader");
+                        textView.setText(model.getHeader());
 
-        for (int i = 0; i <= numberOfCols; i++){
-            FrameLayout grid = (FrameLayout)convertView.findViewWithTag(String.valueOf(i+1));
-            ImageView imageView;
-            if (i < list.size()){
-                GenericModel model = (GenericModel)list.get(i);
-                if (grid != null){
-                    imageView = (ImageView)grid.findViewWithTag("image");
-                    imageView.setBackgroundResource(model.getImageResource());
-
-                    TextView textView = (TextView)grid.findViewWithTag("subHeader");
-                    textView.setText(model.getHeader());
-
-                    grid.setTag(R.id.row, position);
-                    grid.setTag(R.id.col, i);
-                    grid.setOnClickListener(mItemClickListener);
+                        grid.setTag(R.id.row, position);
+                        grid.setTag(R.id.col, i);
+                        grid.setOnClickListener(mItemClickListener);
+                    }
+                }else{
+                    if (grid != null){
+                        grid.setVisibility(View.INVISIBLE);
+                        grid.setOnClickListener(null);
+                    }
                 }
-            }else{
-                if (grid != null){
-                    grid.setVisibility(View.INVISIBLE);
-                }
+                row.addView(grid);
             }
-
+            return row;
         }
-
-        //set hooks for click listener
-
-
-        return convertView;
     }
 
     @Override
@@ -166,14 +166,11 @@ public class FruitsAdapter extends ArrayAdapter<Map<String, List<Object>>>{
     }
 
     private String getHeaderForSection(String section){
-        if (section.equalsIgnoreCase("Banana")){
-            return "Bananas";
-        }else if (section.equalsIgnoreCase("Pineapple")){
-            return "Pineapples";
-        }else if (section.equalsIgnoreCase("Orange")){
-            return "Oranges";
+        if (sectionHeaderTitles != null){
+            return sectionHeaderTitles.get(section);
+        }else{
+            return section;
         }
-        return "";
     }
 
 }

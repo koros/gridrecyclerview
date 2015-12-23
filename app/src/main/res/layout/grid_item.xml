@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemContainer"
+    android:tag="1"
+    android:orientation="vertical"
+    android:layout_width="0dip"
+    android:layout_weight="1"
+    android:layout_height="190dp"
+    android:layout_margin="2dp">
+
+    <ImageView
+        android:tag="image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/itemHeaderText"
+        android:tag="header"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_gravity="top"
+        android:text="Header 1"/>
+
+    <TextView
+        android:id="@+id/itemSubHeaderText"
+        android:tag="subHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#88000000"
+        android:textColor="#fff"
+        android:singleLine="true"
+        android:text="Header 2"/>
+
+</FrameLayout>
