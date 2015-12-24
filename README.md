@@ -1,4 +1,4 @@
-# GridViewExample
+# Android GridView with section headers
 
 Android GridView with categories described <a href="http://stackoverflow.com/questions/7397988/android-gridview-with-categories"> here </a>
 <br/>
