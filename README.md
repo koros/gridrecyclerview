@@ -4,4 +4,4 @@ Android GridView with categories described <a href="http://stackoverflow.com/que
 <br/>
 The implementation uses ordinary listview so it should support nearly all api levels
 <br/><br/>
-<img width="280px" height="450px" src="https://github.com/koros/GridViewExample/blob/master/docs/device-2015-09-19-164814.png"><img>
+<img width="280px" height="450px" src="https://github.com/koros/GridViewExample/blob/master/docs/Screenshot_20231202_024148.png"><img>

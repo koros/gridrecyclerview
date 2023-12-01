@@ -24,7 +24,6 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
     }
 
     public void bind(int cols, List<?> items, K key) {
-        Log.d("", " Cols :: " + cols + " key :: " + key.toString() + " items :: " + items);
         // if the row belongs to a different category remove all child views
         String gridCategoryTag = "grid_section_" + key.hashCode();
         if(parentView.getTag() != gridCategoryTag) {
