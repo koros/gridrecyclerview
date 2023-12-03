@@ -8,14 +8,24 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ViewHolder class for a row in the grid layout of the RecyclerView.
+ *
+ * @param <K> The type of key used to identify sections in the grid.
+ */
 public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
     private final Context context;
     private final ViewGroup parentView;
     private final GridRecyclerViewHelper gridHelper;
 
+    /**
+     * Constructor for GridRecyclerViewHolder.
+     *
+     * @param itemView The view representing a row in the grid.
+     * @param helper   An instance of GridRecyclerViewHelper.
+     */
     GridRecyclerViewHolder(@NonNull ViewGroup itemView, GridRecyclerViewHelper helper) {
         super(itemView);
         this.context = itemView.getContext();
@@ -23,10 +33,17 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
         this.gridHelper = helper;
     }
 
+    /**
+     * Binds data to the ViewHolder.
+     *
+     * @param cols  The number of columns in the grid.
+     * @param items The list of items to be displayed in the grid.
+     * @param key   The key identifying the grid section.
+     */
     public void bind(int cols, List<?> items, K key) {
-        // if the row belongs to a different category remove all child views
+        // if the row belongs to a different category, remove all child views
         String gridCategoryTag = "grid_section_" + key.hashCode();
-        if(parentView.getTag() != gridCategoryTag) {
+        if (parentView.getTag() != gridCategoryTag) {
             parentView.removeAllViews();
             parentView.setTag(gridCategoryTag);
         }
@@ -57,6 +74,11 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
         }
     }
 
+    /**
+     * Creates a new ViewGroup for a grid.
+     *
+     * @return A new ViewGroup for the grid.
+     */
     private ViewGroup createGridView() {
         return (ViewGroup) LayoutInflater.from(context).inflate(R.layout.grid, parentView, false);
     }
