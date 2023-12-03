@@ -5,7 +5,7 @@ Simplify the creation of a grid view with section headers in your Android app us
 
 ## Usage
 
-Add jitpack repository to your Android project, in the `build.gradle` at the end of repositories add the following:
+Add jitpack repository to your Android project, In the `build.gradle` at the end of repositories add the following:
 
 ``` javascript
 repositories {
