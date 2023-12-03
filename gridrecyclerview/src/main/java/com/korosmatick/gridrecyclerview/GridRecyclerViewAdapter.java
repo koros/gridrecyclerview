@@ -2,7 +2,6 @@ package com.korosmatick.gridrecyclerview;
 
 import static com.korosmatick.gridrecyclerview.GridUtils.createSublist;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -83,7 +82,6 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ItemsPosition pos = itemsPositionMap.get(position);
-        Log.d("onBindViewHolder", pos.toString());
         assert pos != null;
         if (isHeaderPosition(position)) {
             gridRecyclerViewHelper.onBindHeaderViewHolder(holder, pos.getKey());

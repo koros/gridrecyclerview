@@ -48,8 +48,8 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
             // bind the view
             if (i < items.size()) {
                 Object item = items.get(i);
-                GridCellViewHolder<?> vh = (GridCellViewHolder<?>) gridContainerView.getTag(R.id.grid_view_holder_id);
-                gridHelper.onBindGridView(vh, item);
+                GridCellViewHolder vh = (GridCellViewHolder) gridContainerView.getTag(R.id.grid_view_holder_id);
+                vh.bind(item);
             } else {
                 // set the container view to invisible, there isn't data to bind
                 gridContainerView.setVisibility(View.INVISIBLE);

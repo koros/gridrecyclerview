@@ -14,7 +14,7 @@ public class DummyDataGenerator {
         actors.add(new Actor("Denzel Washington", "denzel2", 179, 5));
         actors.add(new Actor("Leonardo DiCaprio", "leonardo", 983, 5));
         actors.add(new Actor("Keanu Reeves", "keanu", 349, 5));
-        actors.add(new Actor("Jet Li", "jet_li", 546, 5));
+        actors.add(new Actor("Jet Li", "jet", 546, 5));
         actors.add(new Actor("Harrison Ford", "harrison_ford", 1793, 5));
         actors.add(new Actor("Christoph Waltz", "christoph", 1793, 5));
         actors.add(new Actor("Carrie-Anne Moss", "carrie", 1793, 5));

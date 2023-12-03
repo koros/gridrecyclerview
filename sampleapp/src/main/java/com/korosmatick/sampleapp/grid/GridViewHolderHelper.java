@@ -1,19 +1,13 @@
 package com.korosmatick.sampleapp.grid;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
 import com.korosmatick.gridrecyclerview.GridCellViewHolder;
 import com.korosmatick.sampleapp.R;
-import com.korosmatick.sampleapp.model.Actor;
-import com.korosmatick.sampleapp.model.Director;
-import com.korosmatick.sampleapp.model.Genre;
 import com.korosmatick.sampleapp.model.GridHeader;
-import com.korosmatick.sampleapp.model.Movie;
-import com.korosmatick.sampleapp.model.Studio;
 
 public class GridViewHolderHelper {
 
@@ -51,9 +45,5 @@ public class GridViewHolderHelper {
             default:
                 throw new IllegalArgumentException("Unknown Header Key Value");
         }
-    }
-
-    public static void onBindGridView(@NonNull GridCellViewHolder viewHolder, Object item) {
-        viewHolder.bind(item);
     }
 }

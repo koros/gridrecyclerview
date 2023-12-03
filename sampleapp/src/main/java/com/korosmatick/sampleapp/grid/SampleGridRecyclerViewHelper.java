@@ -1,7 +1,6 @@
 package com.korosmatick.sampleapp.grid;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -35,10 +34,5 @@ public class SampleGridRecyclerViewHelper implements GridRecyclerViewHelper<Grid
     @Override
     public GridCellViewHolder getGridViewHolder(GridHeader key, @NonNull ViewGroup parent) {
         return GridViewHolderHelper.getGridViewHolder(key, parent);
-    }
-
-    @Override
-    public void onBindGridView(@NonNull GridCellViewHolder viewHolder, Object item) {
-        GridViewHolderHelper.onBindGridView(viewHolder, item);
     }
 }
