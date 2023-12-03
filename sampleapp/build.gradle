@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.korosmatick.sampleapp'
+    namespace 'com.github.koros.sampleapp'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.korosmatick.sampleapp"
+        applicationId "com.github.koros.sampleapp"
         minSdk 16
         targetSdk 34
         versionCode 1
