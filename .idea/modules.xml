@@ -11,8 +11,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/sampleapp/GridRecyclerView.sampleapp.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/sampleapp/GridRecyclerView.sampleapp.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/sampleapp/GridRecyclerView.sampleapp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/sampleapp/GridRecyclerView.sampleapp.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/sampleapp/GridRecyclerView.sampleapp.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/sampleapp/GridRecyclerView.sampleapp.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/GridViewExample.iml" filepath="$PROJECT_DIR$/GridViewExample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
