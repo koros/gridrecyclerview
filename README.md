@@ -1,7 +1,7 @@
 # GridRecyclerView
 Simplify the creation of a grid view with section headers in your Android app using the `GridRecyclerView` library. This library leverages the Android `RecyclerView` under the hood, providing flexibility and ease of use.
 
-<img width="280px" height="450px" src="https://github.com/koros/GridViewExample/blob/master/docs/Screenshot_20231202_024148.png"><img>
+<img width="280px" height="450px" src="https://github.com/koros/GridViewExample/blob/master/docs/gridrecyclerview.gif"><img>
 
 ## Usage
 Add the `gridrecyclerview` library to your project
