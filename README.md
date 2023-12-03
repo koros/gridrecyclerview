@@ -4,10 +4,21 @@ Simplify the creation of a grid view with section headers in your Android app us
 <img width="280px" height="450px" src="https://github.com/koros/gridrecyclerview/blob/master/docs/gridrecyclerview.gif"><img>
 
 ## Usage
+
+Add jitpack repository to your Android project, in the `build.gradle` at the end of repositories add the following:
+
+``` javascript
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' } // <-- Add this
+}
+```
+
+
 Add the `gridrecyclerview` library to your project
 
 ``` yaml
-implementation project(':gridrecyclerview')
+implementation 'com.github.koros:gridrecyclerview:1.0.1'
 ```
 
 Once the library is added, follow these steps to create a grid view:
