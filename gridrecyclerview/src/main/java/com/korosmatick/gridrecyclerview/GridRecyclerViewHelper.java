@@ -17,5 +17,5 @@ public interface GridRecyclerViewHelper<K> {
     @NonNull
     GridCellViewHolder getGridViewHolder(K key, @NonNull ViewGroup parent);
 
-    void onBindGridView(@NonNull GridCellViewHolder holder, K key, Object item);
+    void onBindGridView(@NonNull GridCellViewHolder holder, Object item);
 }

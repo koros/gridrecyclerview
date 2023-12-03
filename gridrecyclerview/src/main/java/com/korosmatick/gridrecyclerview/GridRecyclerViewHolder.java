@@ -1,7 +1,6 @@
 package com.korosmatick.gridrecyclerview;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
@@ -49,7 +49,7 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
             if (i < items.size()) {
                 Object item = items.get(i);
                 GridCellViewHolder<?> vh = (GridCellViewHolder<?>) gridContainerView.getTag(R.id.grid_view_holder_id);
-                gridHelper.onBindGridView(vh, key, item);
+                gridHelper.onBindGridView(vh, item);
             } else {
                 // set the container view to invisible, there isn't data to bind
                 gridContainerView.setVisibility(View.INVISIBLE);

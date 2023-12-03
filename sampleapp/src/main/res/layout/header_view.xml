@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/cardMarginVertical"
+    android:layout_marginLeft="@dimen/cardMarginHorizontal"
+    android:layout_marginRight="@dimen/cardMarginHorizontal"
+    android:layout_marginTop="@dimen/cardMarginVertical">
 
     <TextView
         android:id="@+id/txtHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="17sp"
         android:text="Grid Header Text"/>
 
     <TextView

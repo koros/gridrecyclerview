@@ -53,7 +53,7 @@ public class GridViewHolderHelper {
         }
     }
 
-    public static void onBindGridView(@NonNull GridCellViewHolder viewHolder, GridHeader key, Object item) {
+    public static void onBindGridView(@NonNull GridCellViewHolder viewHolder, Object item) {
         viewHolder.bind(item);
     }
 }

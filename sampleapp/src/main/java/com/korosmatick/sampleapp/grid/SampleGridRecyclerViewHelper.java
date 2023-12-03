@@ -38,7 +38,7 @@ public class SampleGridRecyclerViewHelper implements GridRecyclerViewHelper<Grid
     }
 
     @Override
-    public void onBindGridView(@NonNull GridCellViewHolder viewHolder, GridHeader key, Object item) {
-        GridViewHolderHelper.onBindGridView(viewHolder, key, item);
+    public void onBindGridView(@NonNull GridCellViewHolder viewHolder, Object item) {
+        GridViewHolderHelper.onBindGridView(viewHolder, item);
     }
 }
