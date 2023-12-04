@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.korosmatick.gridrecyclerview.R;
+import com.github.koros.gridrecyclerview.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

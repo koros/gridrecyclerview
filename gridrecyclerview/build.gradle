@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.korosmatick.gridrecyclerview'
+    namespace 'com.github.koros.gridrecyclerview'
     compileSdk 34
 
     defaultConfig {
