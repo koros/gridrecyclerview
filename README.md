@@ -18,7 +18,7 @@ repositories {
 Add the `gridrecyclerview` library to your project
 
 ``` yaml
-implementation 'com.github.koros:gridrecyclerview:1.0.1'
+implementation 'com.github.koros:gridrecyclerview:1.0.2'
 ```
 
 Once the library is added, follow these steps to create a grid view:
