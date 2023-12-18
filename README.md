@@ -1,11 +1,12 @@
 # GridRecyclerView
-Simplify the creation of a grid view with section headers in your Android app using the `GridRecyclerView` library. This library leverages the Android `RecyclerView` under the hood, providing flexibility and ease of use.
+`GridRecyclerView` is a native Android library simplifying the display of data in a grid view. The library offers the flexibility to showcase grids with section headers and varying column counts. It efficiently utilizes the Android RecyclerView, ensuring broad device support and easy extensibility.
 
-<img width="280px" height="450px" src="https://github.com/koros/gridrecyclerview/blob/master/docs/gridrecyclerview.gif"><img>
+### Sample Application Screenshot
+<img width="280px" height="450px" src="https://raw.githubusercontent.com/koros/gridrecyclerview/master/docs/gridrecyclerview.gif"><img>
 
 ## Usage
 
-Add jitpack repository to your Android project, In the `build.gradle` at the end of repositories add the following:
+Add `jitpack` repository to your Android project, In the `build.gradle` file at the end of repositories add the following line:
 
 ``` javascript
 repositories {
@@ -24,10 +25,44 @@ implementation 'com.github.koros:gridrecyclerview:1.0.2'
 Once the library is added, follow these steps to create a grid view:
 
 ### 1. Implement the GridRecyclerViewHelper
-Begin by creating a helper class that implements `GridRecyclerViewHelper`. This class manages the creation of headers, the binding of header data, the setup of grid views, and the creation of grid view holders.
+Begin by creating a helper class that implements `GridRecyclerViewHelper` [https://github.com/koros/gridrecyclerview/blob/master/gridrecyclerview/src/main/java/com/github/koros/gridrecyclerview/GridRecyclerViewHelper.java]. This class manages the creation of headers, the binding of header data, the setup of grid views, and the creation of grid view holders.
+
+``` java
+
+public interface GridRecyclerViewHelper<K> {
+
+    RecyclerView.ViewHolder getHeaderViewHolder(@NonNull ViewGroup parent);
+
+    void onBindHeaderViewHolder(@NonNull RecyclerView.ViewHolder holder, K headerItem);
+
+    ViewGroup getGridView(K key, @NonNull ViewGroup parent);
+
+    GridCellViewHolder getGridViewHolder(K key, @NonNull ViewGroup parent);
+}
+
+```
+
+
+In the code snipet above `K` is whichever data type you chose to represent/hold the headers, The sample code uses POJO object `GridHeader` https://github.com/koros/gridrecyclerview/blob/master/sampleapp/src/main/java/com/github/koros/sampleapp/model/GridHeader.java shown below:
+
+``` java
+public class GridHeader {
+    private String header;
+    private String subHeader;
+    private HeaderKey key;
+
+    public GridHeader(String header, HeaderKey key) {
+        this.header = header;
+        this.key = key;
+    }
+    // getters and setters
+}
+```
+
+A complete example of `GridRecyclerViewHelper` can be found in the sample application, https://github.com/koros/gridrecyclerview/blob/master/sampleapp/src/main/java/com/github/koros/sampleapp/grid/SampleGridRecyclerViewHelper.java, a sample snippet is shown below:
+
 
  ``` Java
-
 public class SampleGridRecyclerViewHelper implements GridRecyclerViewHelper<GridHeader> {
     @NonNull
     @Override
@@ -51,12 +86,6 @@ public class SampleGridRecyclerViewHelper implements GridRecyclerViewHelper<Grid
                 return (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(R.layout.genre_view, parent, false);
             case MOVIE:
                 return (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_view, parent, false);
-            case STUDIO:
-                return (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(R.layout.studio_view, parent, false);
-            case DIRECTOR:
-                return (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(R.layout.director_view, parent, false);
-            default:
-                throw new IllegalArgumentException("Unknown Header Key Value");
         }
     }
 
@@ -70,22 +99,14 @@ public class SampleGridRecyclerViewHelper implements GridRecyclerViewHelper<Grid
                 return new GenreViewHolder(parent);
             case MOVIE:
                 return new MovieViewHolder(parent);
-            case STUDIO:
-                return new StudioViewHolder(parent);
-            case DIRECTOR:
-                return new DirectorViewHolder(parent);
-            default:
-                throw new IllegalArgumentException("Unknown Header Key Value");
         }
     }
 }
 
 ```
 
-The `GridHeader` class serves as a Plain Old Java Object (POJO) holding information about grid section headers.
-
 ### 2. Implement ViewHolder for Each Grid Cell
-Next, implement the `GridCellViewHolder` interface to efficiently bind data to each type of grid cell.
+Next, implement the `GridCellViewHolder` interface to bind data to each type of grid cell.
 
 ``` Java
 
@@ -98,7 +119,6 @@ public abstract class GridCellViewHolder<T> extends RecyclerView.ViewHolder {
 For instance, create a specialized ViewHolder for actor cells:
 
 ``` Java
-
 public class ActorViewHolder extends GridCellViewHolder<Actor> {
     private final Context context;
     private final TextView name;
@@ -122,6 +142,10 @@ public class ActorViewHolder extends GridCellViewHolder<Actor> {
 
 ### 3. Initialize the RecyclerView
 In your main activity or fragment, set up the `GridRecyclerViewAdapter` to manage your grid view.
+The `GridRecyclerViewAdapter` receives 3 parameters:
+- GridRecyclerViewHelper
+- Data to display in form of Key -> Value map, where key will represent different sections on the grid and value will be list of data to display. The list of data for each section is wrapped in a GridDescriptor [https://github.com/koros/gridrecyclerview/blob/master/gridrecyclerview/src/main/java/com/github/koros/gridrecyclerview/GridDescriptor.java], which also determines how many colums will be displayed per section 
+- Boolean flag which determines whether a header for an empty section should be shown, `false` by default
 
 ``` Java
 
