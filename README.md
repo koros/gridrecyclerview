@@ -105,7 +105,7 @@ public class SampleGridRecyclerViewHelper implements GridRecyclerViewHelper<Grid
 
 ```
 
-### 2. Implement ViewHolder for Each Grid Cell
+### 2. Implement ViewHolder for each Grid cell
 Next, implement the `GridCellViewHolder` interface to bind data to each type of grid cell.
 
 ``` Java
@@ -147,6 +147,9 @@ The `GridRecyclerViewAdapter` receives 3 parameters:
 - Data to display in form of Key -> Value map, where key will represent different sections on the grid and value will be list of data to display. The list of data for each section is wrapped in a GridDescriptor [https://github.com/koros/gridrecyclerview/blob/master/gridrecyclerview/src/main/java/com/github/koros/gridrecyclerview/GridDescriptor.java], which also determines how many colums will be displayed per section 
 - Boolean flag which determines whether a header for an empty section should be shown, `false` by default
 
+
+#### Below is a code excerpt from the sample app demonstrating the implementation of GridRecyclerView in your Android application.
+https://github.com/koros/gridrecyclerview/blob/master/sampleapp/src/main/java/com/github/koros/sampleapp/MainActivity.java
 ``` Java
 
 public class MainActivity extends AppCompatActivity {
