@@ -2,13 +2,11 @@ package com.github.koros.gridrecyclerview;
 
 import static com.github.koros.gridrecyclerview.GridUtils.createSublist;
 
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.github.koros.gridrecyclerview.R;
 
 import java.util.HashMap;
 import java.util.List;
@@ -94,8 +92,17 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
         if (viewType == HEADER) {
             return gridRecyclerViewHelper.getHeaderViewHolder(parent);
         }
-        ViewGroup view = (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_row_item, parent, false);
-        return new GridRecyclerViewHolder(view, gridRecyclerViewHelper);
+        return new GridRecyclerViewHolder(createGridRowView(parent), gridRecyclerViewHelper);
+    }
+
+    private ViewGroup createGridRowView(@NonNull ViewGroup parent) {
+        LinearLayout row = new LinearLayout(parent.getContext());
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setLayoutParams(new RecyclerView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        return row;
     }
 
     /**
