@@ -10,9 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.koros.gridrecyclerview.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,13 +20,12 @@ import java.util.Map;
  * @param <K> The type of key used to identify sections in the grid.
  */
 public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int HEADER = 0;
-    private static final int GRID_ROW = 1;
-    private final List<String> headersPositionMap = new ArrayList<>();
-    private final Map<Integer, ItemsPosition> itemsPositionMap = new LinkedHashMap<>();
+    private static final int HEADER = GridLayoutMetadata.HEADER;
+    private static final int GRID_ROW = GridLayoutMetadata.GRID_ROW;
     private Map<K, GridDescriptor<?>> gridItems = new HashMap<>();
     private boolean showHeadersForEmptySections = false;
     private final GridRecyclerViewHelper gridRecyclerViewHelper;
+    private GridLayoutMetadata<K> layoutMetadata;
 
     /**
      * Constructor for GridRecyclerViewAdapter.
@@ -81,25 +78,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
      * Initializes the metadata for the grid, including headers and item positions.
      */
     private void initializeGridMetaData() {
-        // Start counting from 0
-        itemsPositionMap.clear();
-        for (Map.Entry<K, GridDescriptor<?>> entry : gridItems.entrySet()) {
-            GridDescriptor<?> value = entry.getValue();
-            List<?> items = value.getItems();
-            K key = entry.getKey();
-
-            int numberOfCols = value.getNumberOfColumns();
-
-            // Add the header position
-            if (showHeadersForEmptySections || items.size() > 0) {
-                int currentPosition = itemsPositionMap.size();
-                itemsPositionMap.put(currentPosition, new ItemsPosition<>(HEADER, key));
-                headersPositionMap.add(String.valueOf(currentPosition));
-            }
-            for (int i = 0; i < items.size(); i += numberOfCols) {
-                itemsPositionMap.put(itemsPositionMap.size(), new ItemsPosition<>(HEADER, key, i, i + numberOfCols));
-            }
-        }
+        layoutMetadata = GridLayoutMetadata.from(gridItems, showHeadersForEmptySections);
     }
 
     /**
@@ -127,7 +106,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
      */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ItemsPosition pos = itemsPositionMap.get(position);
+        ItemsPosition pos = layoutMetadata.getItemPosition(position);
         assert pos != null;
         if (isHeaderPosition(position)) {
             gridRecyclerViewHelper.onBindHeaderViewHolder(holder, pos.getKey());
@@ -157,7 +136,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
      */
     @Override
     public int getItemCount() {
-        return itemsPositionMap.size();
+        return layoutMetadata.getItemCount();
     }
 
     /**
@@ -181,7 +160,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
      * @return True if the position is a header position, false otherwise.
      */
     public boolean isHeaderPosition(int position) {
-        return headersPositionMap.contains(String.valueOf(position));
+        return layoutMetadata.isHeaderPosition(position);
     }
 
     /**
@@ -193,6 +172,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     public void setGridItems(Map<K, GridDescriptor<?>> gridItems) {
         this.gridItems = gridItems;
         initializeGridMetaData();
+        notifyDataSetChanged();
     }
 
     /**
@@ -203,5 +183,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     @SuppressWarnings("unused")
     public void setShowHeadersForEmptySections(boolean showHeadersForEmptySections) {
         this.showHeadersForEmptySections = showHeadersForEmptySections;
+        initializeGridMetaData();
+        notifyDataSetChanged();
     }
 }
