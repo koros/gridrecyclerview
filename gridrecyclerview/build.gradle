@@ -57,6 +57,34 @@ dependencies {
     metalava libs.metalava
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = rootProject.group
+                artifactId = 'gridrecyclerview'
+                version = rootProject.version
+
+                artifact(layout.buildDirectory.file('outputs/aar/gridrecyclerview-release.aar')) {
+                    builtBy tasks.named('bundleReleaseAar')
+                }
+
+                pom {
+                    name = 'GridRecyclerView'
+                    description = 'Android sectioned grid library with RecyclerView and Compose renderers.'
+                    url = 'https://github.com/koros/gridrecyclerview'
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'https://opensource.org/license/mit/'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 def apiFile = rootProject.layout.projectDirectory.file('api/current.txt')
 def generatedApiFile = layout.buildDirectory.file('api/current.txt')
 def releaseCompileClasspathJarsProvider = providers.provider {
