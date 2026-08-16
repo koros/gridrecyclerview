@@ -6,23 +6,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * An interface providing methods to customize the behavior of the GridRecyclerViewAdapter.
+ * Callback interface used by {@link GridRecyclerViewAdapter} to create and bind views.
  *
  * @param <K> The type of key used to identify sections in the grid.
  */
 public interface GridRecyclerViewHelper<K> {
 
     /**
-     * Gets a ViewHolder for the header of a grid section.
+     * Creates a ViewHolder for a section header row.
      *
      * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
-     * @return A new ViewHolder for the header.
+     * @return A new ViewHolder for a section header.
      */
     @NonNull
     RecyclerView.ViewHolder getHeaderViewHolder(@NonNull ViewGroup parent);
 
     /**
-     * Binds data to the header ViewHolder.
+     * Binds a section key or header model to its header ViewHolder.
      *
      * @param holder      The ViewHolder which should be updated to represent the contents of the header.
      * @param headerItem  The item associated with the header.
@@ -30,17 +30,17 @@ public interface GridRecyclerViewHelper<K> {
     void onBindHeaderViewHolder(@NonNull RecyclerView.ViewHolder holder, K headerItem);
 
     /**
-     * Gets a ViewGroup for the main content of a grid section.
+     * Creates the container used to hold one row of grid cells.
      *
      * @param key    The key identifying the grid section.
      * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
-     * @return A new ViewGroup for the main content of the grid section.
+     * @return A ViewGroup that can host the row's cell views.
      */
     @NonNull
     ViewGroup getGridView(K key, @NonNull ViewGroup parent);
 
     /**
-     * Gets a ViewHolder for a cell in the grid.
+     * Creates a ViewHolder for one grid cell.
      *
      * @param key    The key identifying the grid section.
      * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.

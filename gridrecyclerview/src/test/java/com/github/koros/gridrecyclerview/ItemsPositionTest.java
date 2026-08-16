@@ -6,7 +6,13 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+/**
+ * Unit tests for {@link ItemsPosition}.
+ */
 public class ItemsPositionTest {
+    /**
+     * Verifies that the header constructor initializes an empty item range.
+     */
     @Test
     public void shortConstructorDefaultsRangeToZero() {
         ItemsPosition<String> position = new ItemsPosition<>(GridLayoutMetadata.HEADER, "movies");
@@ -17,6 +23,9 @@ public class ItemsPositionTest {
         assertEquals(0, position.getEnd());
     }
 
+    /**
+     * Verifies that every mutable field can be updated.
+     */
     @Test
     public void settersUpdateAllFields() {
         ItemsPosition<String> position = new ItemsPosition<>(GridLayoutMetadata.HEADER, "movies");
@@ -32,10 +41,14 @@ public class ItemsPositionTest {
         assertEquals(6, position.getEnd());
     }
 
+    /**
+     * Verifies that equality includes item type, key, and row range.
+     */
     @Test
     public void equalityIncludesTypeKeyAndRange() {
         ItemsPosition<String> position = new ItemsPosition<>(GridLayoutMetadata.GRID_ROW, "movies", 0, 2);
 
+        // Each differing field should be enough to make positions distinct.
         assertEquals(position, new ItemsPosition<>(GridLayoutMetadata.GRID_ROW, "movies", 0, 2));
         assertEquals(position.hashCode(), new ItemsPosition<>(GridLayoutMetadata.GRID_ROW, "movies", 0, 2).hashCode());
         assertNotEquals(position, new ItemsPosition<>(GridLayoutMetadata.HEADER, "movies", 0, 2));
@@ -44,6 +57,9 @@ public class ItemsPositionTest {
         assertNotEquals(position, new ItemsPosition<>(GridLayoutMetadata.GRID_ROW, "movies", 0, 3));
     }
 
+    /**
+     * Verifies that {@link ItemsPosition#toString()} includes useful diagnostics.
+     */
     @Test
     public void toStringContainsUsefulFields() {
         String value = new ItemsPosition<>(GridLayoutMetadata.GRID_ROW, "movies", 0, 2).toString();

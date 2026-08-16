@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An adapter for displaying a grid layout in a RecyclerView with headers for each section.
+ * RecyclerView adapter for sectioned grids with optional headers for empty sections.
+ *
+ * <p>This class keeps the original View-based API available for apps that have not migrated to
+ * Compose. New Compose callers should prefer {@code GridRecyclerView} from the Kotlin source.</p>
  *
  * @param <K> The type of key used to identify sections in the grid.
  */
@@ -26,9 +29,9 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     private GridLayoutMetadata<K> layoutMetadata;
 
     /**
-     * Constructor for GridRecyclerViewAdapter.
+     * Creates an empty adapter that hides headers for empty sections.
      *
-     * @param gridRecyclerViewHelper An instance of GridRecyclerViewHelper.
+     * @param gridRecyclerViewHelper Helper responsible for creating section header and cell views.
      */
     @SuppressWarnings("unused")
     public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper) {
@@ -36,10 +39,10 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Constructor for GridRecyclerViewAdapter with an option to show headers for empty sections.
+     * Creates an empty adapter with configurable empty-section header behavior.
      *
-     * @param gridRecyclerViewHelper           An instance of GridRecyclerViewHelper.
-     * @param showHeadersForEmptySections      True to show headers for empty sections, false otherwise.
+     * @param gridRecyclerViewHelper      Helper responsible for creating section header and cell views.
+     * @param showHeadersForEmptySections True to show headers for empty sections, false otherwise.
      */
     @SuppressWarnings("unused")
     public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, boolean showHeadersForEmptySections) {
@@ -47,9 +50,9 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Constructor for GridRecyclerViewAdapter with initial grid items.
+     * Creates an adapter with initial grid items that hides headers for empty sections.
      *
-     * @param gridRecyclerViewHelper An instance of GridRecyclerViewHelper.
+     * @param gridRecyclerViewHelper Helper responsible for creating section header and cell views.
      * @param gridItems              Initial grid items to be displayed.
      */
     @SuppressWarnings("unused")
@@ -58,11 +61,11 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Constructor for GridRecyclerViewAdapter with initial grid items and an option to show headers for empty sections.
+     * Creates an adapter with initial grid items and configurable empty-section header behavior.
      *
-     * @param gridRecyclerViewHelper           An instance of GridRecyclerViewHelper.
-     * @param gridItems                        Initial grid items to be displayed.
-     * @param showHeadersForEmptySections      True to show headers for empty sections, false otherwise.
+     * @param gridRecyclerViewHelper      Helper responsible for creating section header and cell views.
+     * @param gridItems                   Initial grid items to be displayed.
+     * @param showHeadersForEmptySections True to show headers for empty sections, false otherwise.
      */
     public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, Map<K, GridDescriptor<?>> gridItems, boolean showHeadersForEmptySections) {
         super();
@@ -73,14 +76,14 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Initializes the metadata for the grid, including headers and item positions.
+     * Rebuilds the flattened metadata used by RecyclerView callbacks.
      */
     private void initializeGridMetaData() {
         layoutMetadata = GridLayoutMetadata.from(gridItems, showHeadersForEmptySections);
     }
 
     /**
-     * Creates and returns a new ViewHolder based on the given viewType.
+     * Creates a ViewHolder for either a section header or a horizontal grid row.
      *
      * @param parent   The ViewGroup into which the new View will be added after it is bound to an adapter position.
      * @param viewType The view type of the new View.
@@ -95,6 +98,12 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
         return new GridRecyclerViewHolder(createGridRowView(parent), gridRecyclerViewHelper);
     }
 
+    /**
+     * Creates the programmatic parent container for one grid row.
+     *
+     * @param parent RecyclerView parent used for context and layout parameters.
+     * @return Horizontal row container whose children are weighted grid-cell containers.
+     */
     private ViewGroup createGridRowView(@NonNull ViewGroup parent) {
         LinearLayout row = new LinearLayout(parent.getContext());
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -106,7 +115,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Called by RecyclerView to display the data at the specified position.
+     * Binds a header row or grid row for a flattened adapter position.
      *
      * @param holder   The ViewHolder which should be updated to represent the contents of the item at the given position.
      * @param position The position of the item within the adapter's data set.
@@ -116,6 +125,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
         ItemsPosition pos = layoutMetadata.getItemPosition(position);
         assert pos != null;
         if (isHeaderPosition(position)) {
+            // Header binding is fully caller-owned because apps define their own header view shape.
             gridRecyclerViewHelper.onBindHeaderViewHolder(holder, pos.getKey());
         } else {
             bindGridRow(holder, pos);
@@ -123,7 +133,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Binds data to a grid row in the RecyclerView.
+     * Extracts a row-sized slice from the section data and delegates cell binding to the row holder.
      *
      * @param holder The ViewHolder which should be updated to represent the contents of the grid row.
      * @param pos    The position information for the grid row.
@@ -131,13 +141,15 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     private void bindGridRow(@NonNull final RecyclerView.ViewHolder holder, final ItemsPosition pos) {
         GridDescriptor<?> gridItem = gridItems.get(pos.key);
         assert gridItem != null;
+        // Metadata end positions may extend past the list size on partial rows; createSublist
+        // clamps that range before binding.
         List<?> subList = createSublist(gridItem.getItems(), pos.start, pos.end);
         GridRecyclerViewHolder vh = (GridRecyclerViewHolder) holder;
         vh.bind(gridItem.getNumberOfColumns(), subList, pos.key);
     }
 
     /**
-     * Returns the total number of items in the adapter.
+     * Returns the total number of flattened rows, including headers.
      *
      * @return The total number of items in the adapter.
      */
@@ -147,7 +159,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Returns the view type of the item at the specified position.
+     * Returns the RecyclerView type for a flattened row position.
      *
      * @param position The position of the item within the adapter's data set.
      * @return An integer representing the view type.
@@ -161,7 +173,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Checks if the given position corresponds to a header position.
+     * Checks whether a flattened adapter position corresponds to a section header.
      *
      * @param position The position to check.
      * @return True if the position is a header position, false otherwise.
@@ -171,7 +183,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Sets new grid items for the adapter.
+     * Replaces the section data and refreshes adapter metadata.
      *
      * @param gridItems New grid items to be displayed.
      */
@@ -183,7 +195,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     }
 
     /**
-     * Sets whether to show headers for empty sections.
+     * Updates empty-section header behavior and refreshes adapter metadata.
      *
      * @param showHeadersForEmptySections True to show headers for empty sections, false otherwise.
      */

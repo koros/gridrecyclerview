@@ -11,15 +11,18 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 /**
- * Instrumented test, which will execute on an Android device.
+ * Instrumented smoke test for the library test APK.
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    /**
+     * Verifies that instrumentation can resolve the library test package context.
+     */
     @Test
     public void useAppContext() {
-        // Context of the app under test.
+        // The target context comes from the generated Android test package.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.korosmatick.gridrecyclerview.test", appContext.getPackageName());
     }

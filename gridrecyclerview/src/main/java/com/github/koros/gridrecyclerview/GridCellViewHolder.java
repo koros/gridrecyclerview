@@ -6,14 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * An abstract class representing a ViewHolder for a cell in a grid layout.
+ * Base ViewHolder used for one cell inside a grid row.
  *
- * @param <T> The type of object to be bound to the ViewHolder.
+ * @param <T> The type of item bound to the cell.
  */
 public abstract class GridCellViewHolder<T> extends RecyclerView.ViewHolder {
 
     /**
-     * Constructor for GridCellViewHolder.
+     * Creates a cell holder around the supplied item view.
      *
      * @param itemView The view representing the grid cell.
      */
@@ -22,9 +22,9 @@ public abstract class GridCellViewHolder<T> extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Binds data to the ViewHolder.
+     * Binds the supplied item into this cell holder.
      *
-     * @param object The object to be bound to the ViewHolder.
+     * @param object The item to display in the cell.
      */
     public abstract void bind(T object);
 }

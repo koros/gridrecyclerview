@@ -10,7 +10,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Unit tests for {@link GridDescriptor}.
+ */
 public class GridDescriptorTest {
+    /**
+     * Verifies that constructor arguments are stored without copying.
+     */
     @Test
     public void constructorStoresColumnCountAndItems() {
         List<String> items = Arrays.asList("A", "B");
@@ -21,6 +27,9 @@ public class GridDescriptorTest {
         assertSame(items, descriptor.getItems());
     }
 
+    /**
+     * Verifies that mutable descriptor properties can be replaced.
+     */
     @Test
     public void settersUpdateColumnCountAndItems() {
         GridDescriptor<String> descriptor = new GridDescriptor<>(1, Collections.singletonList("A"));
@@ -33,8 +42,12 @@ public class GridDescriptorTest {
         assertSame(newItems, descriptor.getItems());
     }
 
+    /**
+     * Verifies that descriptors reject column counts that cannot form a grid.
+     */
     @Test
     public void rejectsInvalidColumnCounts() {
+        // Both zero and negative counts should fail before layout metadata is calculated.
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new GridDescriptor<>(0, Collections.emptyList())
@@ -45,6 +58,9 @@ public class GridDescriptorTest {
         );
     }
 
+    /**
+     * Verifies that descriptors reject null item lists.
+     */
     @Test
     public void rejectsNullItems() {
         assertThrows(

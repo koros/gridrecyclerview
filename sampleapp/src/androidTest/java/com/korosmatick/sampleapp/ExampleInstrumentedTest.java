@@ -11,15 +11,18 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 /**
- * Instrumented test, which will execute on an Android device.
+ * Instrumented smoke test for the sample application.
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    /**
+     * Verifies that instrumentation can resolve the sample app package context.
+     */
     @Test
     public void useAppContext() {
-        // Context of the app under test.
+        // The target context should belong to the installed sample app.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.korosmatick.sampleapp", appContext.getPackageName());
     }

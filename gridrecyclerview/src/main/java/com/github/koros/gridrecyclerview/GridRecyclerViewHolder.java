@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 /**
- * ViewHolder class for a row in the grid layout of the RecyclerView.
+ * RecyclerView ViewHolder that renders one horizontal row of grid cells.
+ *
+ * <p>The holder creates its row and cell containers programmatically so the library can support
+ * the legacy RecyclerView API without shipping XML layout resources.</p>
  *
  * @param <K> The type of key used to identify sections in the grid.
  */
@@ -19,10 +22,10 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
     private final GridRecyclerViewHelper gridHelper;
 
     /**
-     * Constructor for GridRecyclerViewHolder.
+     * Creates a row holder around a horizontal parent container.
      *
      * @param itemView The view representing a row in the grid.
-     * @param helper   An instance of GridRecyclerViewHelper.
+     * @param helper   Helper used to create and bind caller-provided cell views.
      */
     GridRecyclerViewHolder(@NonNull ViewGroup itemView, GridRecyclerViewHelper helper) {
         super(itemView);
@@ -31,35 +34,40 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Binds data to the ViewHolder.
+     * Binds the row's visible cells and hides any trailing placeholders.
      *
      * @param cols  The number of columns in the grid.
      * @param items The list of items to be displayed in the grid.
      * @param key   The key identifying the grid section.
      */
     public void bind(int cols, List<?> items, K key) {
-        // if the row belongs to a different category, remove all child views
         String gridCategoryTag = "grid_section_" + key.hashCode();
+
+        // RecyclerView rows are recycled across sections. When the section changes, discard
+        // existing cell containers because the caller may provide a different cell layout type.
         if (!gridCategoryTag.equals(parentView.getTag())) {
             parentView.removeAllViews();
             parentView.setTag(gridCategoryTag);
         }
-        // create the grids
+
         for (int i = 0; i < cols; i++) {
             String containerViewTag = "container_" + key.hashCode() + "_col_" + i;
-            // get the grid container view
             GridCellContainer gridContainerView = parentView.findViewWithTag(containerViewTag);
+
+            // Cell containers are reused within the same section to avoid repeatedly asking the
+            // helper to inflate/create item views while rows scroll in and out.
             if (gridContainerView == null) {
                 gridContainerView = createGridView();
                 gridContainerView.setTag(containerViewTag);
                 ViewGroup gridView = gridHelper.getGridView(key, gridContainerView);
-                // get the View Holder
                 gridContainerView.viewHolder = gridHelper.getGridViewHolder(key, gridView);
                 gridContainerView.addView(gridView);
                 parentView.addView(gridContainerView);
             }
-            // bind the view
+
             if (i < items.size()) {
+                // A recycled container may have been hidden when it represented an empty trailing
+                // column in a previous row, so make it visible before binding real data.
                 gridContainerView.setVisibility(View.VISIBLE);
                 Object item = items.get(i);
                 GridCellViewHolder vh = gridContainerView.viewHolder;
@@ -67,16 +75,16 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
                     vh.bind(item);
                 }
             } else {
-                // set the container view to invisible, there isn't data to bind
+                // Preserve column width with an invisible placeholder when the final row is short.
                 gridContainerView.setVisibility(View.INVISIBLE);
             }
         }
     }
 
     /**
-     * Creates a new ViewGroup for a grid.
+     * Creates a weighted cell container for one column in the row.
      *
-     * @return A new ViewGroup for the grid.
+     * @return A new container ready to host a caller-provided cell view.
      */
     private GridCellContainer createGridView() {
         GridCellContainer container = new GridCellContainer(parentView);
@@ -92,6 +100,11 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
     private static final class GridCellContainer extends LinearLayout {
         GridCellViewHolder<?> viewHolder;
 
+        /**
+         * Creates a cell container with the same context as the parent row.
+         *
+         * @param parent Parent row used only for obtaining the Android context.
+         */
         GridCellContainer(@NonNull ViewGroup parent) {
             super(parent.getContext());
         }

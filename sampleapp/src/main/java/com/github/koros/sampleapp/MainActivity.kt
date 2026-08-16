@@ -45,7 +45,15 @@ import com.github.koros.sampleapp.util.DummyDataGenerator.getSampleGenres
 import com.github.koros.sampleapp.util.DummyDataGenerator.getSampleMovies
 import com.github.koros.sampleapp.util.HeaderKey
 
+/**
+ * Entry point for the sample app that demonstrates the Compose grid library.
+ */
 class MainActivity : ComponentActivity() {
+    /**
+     * Creates the Compose UI and renders the sample grid sections.
+     *
+     * @param savedInstanceState Previously saved activity state, if Android is recreating the activity.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,12 +70,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * Builds the ordered sample sections shown by the demo screen.
+ *
+ * @return A linked map so the sample renders sections in the declared order.
+ */
 private fun sampleGridItems(): Map<GridHeader, GridDescriptor<*>> = linkedMapOf(
     GridHeader("Genres", "One column section", HeaderKey.GENRE) to GridDescriptor(1, getSampleGenres()),
     GridHeader("Movies", "Two column section", HeaderKey.MOVIE) to GridDescriptor(2, getSampleMovies()),
     GridHeader("Actors", "Three column section", HeaderKey.ACTOR) to GridDescriptor(3, getSampleActors())
 )
 
+/**
+ * Renders all sample sections and delegates each section's cell UI to typed cards.
+ *
+ * @param gridItems The section descriptors to render in display order.
+ */
 @Composable
 private fun SampleGridScreen(gridItems: Map<GridHeader, GridDescriptor<*>>) {
     val context = LocalContext.current
@@ -82,6 +100,7 @@ private fun SampleGridScreen(gridItems: Map<GridHeader, GridDescriptor<*>>) {
             SectionHeader(header = header)
         },
         gridItemContent = { header, item ->
+            // Keep click ownership inside the item content so each card can use its typed model.
             when (header.key) {
                 HeaderKey.GENRE -> {
                     val genre = item as Genre
@@ -104,12 +123,20 @@ private fun SampleGridScreen(gridItems: Map<GridHeader, GridDescriptor<*>>) {
                         modifier = Modifier.clickable { showSelection(context, header, actor.name) }
                     )
                 }
+                // Unknown sample keys still render a readable fallback instead of failing the preview.
                 else -> Text(text = item.toString())
             }
         }
     )
 }
 
+/**
+ * Shows the selected item from a sample section.
+ *
+ * @param context Android context used to display the toast.
+ * @param header  The section header for the selected item.
+ * @param itemName The display name of the selected item.
+ */
 private fun showSelection(context: android.content.Context, header: GridHeader, itemName: String) {
     Toast.makeText(
         context,
@@ -118,6 +145,11 @@ private fun showSelection(context: android.content.Context, header: GridHeader, 
     ).show()
 }
 
+/**
+ * Renders a section heading and optional subheading.
+ *
+ * @param header The header model for the section.
+ */
 @Composable
 private fun SectionHeader(header: GridHeader) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -127,6 +159,7 @@ private fun SectionHeader(header: GridHeader) {
             fontWeight = FontWeight.SemiBold,
             color = Color(0xFF202124)
         )
+        // Subheaders are optional so compact sections can use only a title.
         header.subHeader?.let {
             Text(
                 text = it,
@@ -137,6 +170,12 @@ private fun SectionHeader(header: GridHeader) {
     }
 }
 
+/**
+ * Renders a wide genre card for the one-column section.
+ *
+ * @param genre    The genre model to display.
+ * @param modifier Caller-provided modifier, typically including click behavior.
+ */
 @Composable
 private fun GenreCard(genre: Genre, modifier: Modifier = Modifier) {
     CardShell(modifier = modifier) {
@@ -161,16 +200,35 @@ private fun GenreCard(genre: Genre, modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * Renders a movie item using the shared poster-card treatment.
+ *
+ * @param movie    The movie model to display.
+ * @param modifier Caller-provided modifier, typically including click behavior.
+ */
 @Composable
 private fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
     PosterCard(title = movie.name, imageName = movie.cover, modifier = modifier)
 }
 
+/**
+ * Renders an actor item using the shared poster-card treatment.
+ *
+ * @param actor    The actor model to display.
+ * @param modifier Caller-provided modifier, typically including click behavior.
+ */
 @Composable
 private fun ActorCard(actor: Actor, modifier: Modifier = Modifier) {
     PosterCard(title = actor.name, imageName = actor.image, modifier = modifier)
 }
 
+/**
+ * Renders an image-first card used by poster-like sample content.
+ *
+ * @param title    Text shown below the image.
+ * @param imageName Drawable resource name for the card image.
+ * @param modifier Caller-provided modifier for layout and interaction.
+ */
 @Composable
 private fun PosterCard(title: String, imageName: String, modifier: Modifier = Modifier) {
     CardShell(modifier = modifier) {
@@ -192,6 +250,12 @@ private fun PosterCard(title: String, imageName: String, modifier: Modifier = Mo
     }
 }
 
+/**
+ * Provides shared card styling for sample grid items.
+ *
+ * @param modifier Caller-provided modifier applied to the card.
+ * @param content  Card body content.
+ */
 @Composable
 private fun CardShell(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Card(
@@ -206,10 +270,18 @@ private fun CardShell(modifier: Modifier = Modifier, content: @Composable () -> 
     }
 }
 
+/**
+ * Resolves a drawable by resource name and renders it with a placeholder fallback.
+ *
+ * @param name               Drawable resource entry name.
+ * @param contentDescription Accessibility description for the image.
+ * @param modifier           Caller-provided image modifier.
+ */
 @Composable
 private fun NamedImage(name: String, contentDescription: String?, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val imageId = remember(name) {
+        // Resource names come from sample data, so fall back when the drawable is absent.
         context.resources.getIdentifier(name, "drawable", context.packageName)
             .takeIf { it != 0 }
             ?: R.drawable.ic_placeholder
