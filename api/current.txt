@@ -1,0 +1,66 @@
+// Signature format: 2.0
+package com.github.koros.gridrecyclerview {
+
+  public abstract class GridCellViewHolder<T> extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
+    ctor public GridCellViewHolder(@NonNull android.view.View);
+    method public abstract void bind(T);
+  }
+
+  public class GridDescriptor<T> {
+    ctor public GridDescriptor(int, java.util.List<T>);
+    method public java.util.List<T> getItems();
+    method public int getNumberOfColumns();
+    method public void setItems(java.util.List<T>);
+    method public void setNumberOfColumns(int);
+  }
+
+  public class GridRecyclerViewAdapter<K> extends androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder> {
+    ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper);
+    ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, boolean);
+    ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>);
+    ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>, boolean);
+    method public int getItemCount();
+    method public boolean isHeaderPosition(int);
+    method public void onBindViewHolder(@NonNull androidx.recyclerview.widget.RecyclerView.ViewHolder, int);
+    method @NonNull public androidx.recyclerview.widget.RecyclerView.ViewHolder onCreateViewHolder(@NonNull android.view.ViewGroup, int);
+    method public void setGridItems(java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>);
+    method public void setShowHeadersForEmptySections(boolean);
+  }
+
+  public interface GridRecyclerViewHelper<K> {
+    method @NonNull public android.view.ViewGroup getGridView(K, @NonNull android.view.ViewGroup);
+    method @NonNull public com.github.koros.gridrecyclerview.GridCellViewHolder getGridViewHolder(K, @NonNull android.view.ViewGroup);
+    method @NonNull public androidx.recyclerview.widget.RecyclerView.ViewHolder getHeaderViewHolder(@NonNull android.view.ViewGroup);
+    method public void onBindHeaderViewHolder(@NonNull androidx.recyclerview.widget.RecyclerView.ViewHolder, K);
+  }
+
+  public class GridRecyclerViewHolder<K> extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
+    method public void bind(int, java.util.List<?>, K);
+  }
+
+  public final class GridRecyclerViewKt {
+    method @KotlinOnly @androidx.compose.runtime.Composable public static <K> void GridRecyclerView(java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>> gridItems, androidx.compose.ui.Modifier modifier, boolean showHeadersForEmptySections, androidx.compose.foundation.layout.PaddingValues contentPadding, androidx.compose.foundation.layout.Arrangement.Vertical verticalArrangement, androidx.compose.foundation.layout.Arrangement.Horizontal horizontalArrangement, kotlin.jvm.functions.Function2<androidx.compose.foundation.lazy.LazyItemScope,K,kotlin.Unit> headerContent, kotlin.jvm.functions.Function2<K,java.lang.Object,kotlin.Unit> gridItemContent);
+  }
+
+  public class GridUtils {
+    ctor public GridUtils();
+    method public static java.util.List<?> createSublist(java.util.List<?>, int, int);
+    method public static <K, T> T getItem(java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>, K, int);
+    method public static <K, T> T getItem(java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>, K, int, Class<T>);
+  }
+
+  public class ItemsPosition<K> {
+    ctor public ItemsPosition(int, K);
+    ctor public ItemsPosition(int, K, int, int);
+    method public int getEnd();
+    method public int getItemType();
+    method public K getKey();
+    method public int getStart();
+    method public void setEnd(int);
+    method public void setItemType(int);
+    method public void setKey(K);
+    method public void setStart(int);
+  }
+
+}
+

@@ -1,0 +1,60 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "platforms;android-37.0" "build-tools;36.0.0" || sdkmanager "platforms;android-37" "build-tools;36.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        run: ./gradlew checkApi build --stacktrace
+
+      - name: Upload AAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: gridrecyclerview-aar
+          path: gridrecyclerview/build/outputs/aar/*.aar
+
+      - name: Upload sample APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: sampleapp-apks
+          path: sampleapp/build/outputs/apk/**/*.apk
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-reports
+          path: |
+            **/build/reports/**
+            **/build/outputs/logs/**

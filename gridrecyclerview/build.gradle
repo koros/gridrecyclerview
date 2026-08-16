@@ -4,6 +4,10 @@ plugins {
     id 'maven-publish'
 }
 
+configurations {
+    metalava
+}
+
 android {
     namespace = 'com.github.koros.gridrecyclerview'
     compileSdk = libs.versions.compileSdk.get().toInteger()
@@ -49,4 +53,75 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.androidx.test.espresso.core
+
+    metalava libs.metalava
+}
+
+def apiFile = rootProject.layout.projectDirectory.file('api/current.txt')
+def generatedApiFile = layout.buildDirectory.file('api/current.txt')
+def releaseCompileClasspathJarsProvider = providers.provider {
+    configurations.getByName('releaseCompileClasspath').incoming.artifactView {
+        attributes.attribute(Attribute.of('artifactType', String), 'android-classes-jar')
+    }.files.files*.absolutePath
+}
+def androidJarProvider = providers.provider {
+    def compileSdkVersion = libs.versions.compileSdk.get()
+    def sdkDirectoryPath = System.getenv('ANDROID_HOME') ?: System.getenv('ANDROID_SDK_ROOT') ?: "${System.properties['user.home']}/Library/Android/sdk"
+    def sdkDirectory = file(sdkDirectoryPath)
+    def candidates = [
+            new File(sdkDirectory, "platforms/android-${compileSdkVersion}/android.jar"),
+            new File(sdkDirectory, "platforms/android-${compileSdkVersion}.0/android.jar")
+    ]
+    def androidJar = candidates.find { it.exists() } ?: candidates.first()
+    androidJar.absolutePath
+}
+
+tasks.register('generateApi', JavaExec) {
+    group = 'verification'
+    description = 'Generate the public API signature file for the Android library.'
+    dependsOn 'compileReleaseKotlin', 'compileReleaseJavaWithJavac'
+
+    classpath = configurations.metalava
+    mainClass = 'com.android.tools.metalava.Driver'
+    doFirst {
+        apiFile.asFile.parentFile.mkdirs()
+        args = [
+                '--source-path', file('src/main/java').absolutePath,
+                '--classpath', ([androidJarProvider.get()] + releaseCompileClasspathJarsProvider.get()).join(File.pathSeparator),
+                '--api', apiFile.asFile.absolutePath,
+                '--format=2.0',
+                '--hide', 'UnresolvedImport'
+        ]
+    }
+}
+
+tasks.register('checkApi', JavaExec) {
+    group = 'verification'
+    description = 'Verify the public API signature file is up to date.'
+    dependsOn 'compileReleaseKotlin', 'compileReleaseJavaWithJavac'
+
+    classpath = configurations.metalava
+    mainClass = 'com.android.tools.metalava.Driver'
+    doFirst {
+        generatedApiFile.get().asFile.parentFile.mkdirs()
+        args = [
+                '--source-path', file('src/main/java').absolutePath,
+                '--classpath', ([androidJarProvider.get()] + releaseCompileClasspathJarsProvider.get()).join(File.pathSeparator),
+                '--api', generatedApiFile.get().asFile.absolutePath,
+                '--format=2.0',
+                '--hide', 'UnresolvedImport',
+                '--check-compatibility:api:released', apiFile.asFile.absolutePath
+        ]
+    }
+    doLast {
+        def expected = apiFile.asFile.text
+        def actual = generatedApiFile.get().asFile.text
+        if (expected != actual) {
+            throw new GradleException("Public API changed. Run './gradlew :gridrecyclerview:generateApi' and commit api/current.txt if this change is intentional.")
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn 'checkApi'
 }
