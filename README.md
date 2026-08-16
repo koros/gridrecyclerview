@@ -123,4 +123,13 @@ GitHub Actions runs on pushes and pull requests. The pipeline:
 - publishes the release AAR to Maven Local as a pipeline validation step
 - uploads the generated AAR, sample APKs, and build reports as workflow artifacts
 
+Tag pushes also create GitHub Releases automatically. To release a new version:
+
+```sh
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+The release workflow strips the leading `v`, builds with `RELEASE_VERSION=1.1.0`, creates or updates the matching GitHub Release, and attaches the generated AAR plus sample APKs.
+
 API governance is handled with Metalava signature checks. CI fails when public API changes are not reflected in `api/current.txt`.

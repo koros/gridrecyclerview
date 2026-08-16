@@ -5,4 +5,4 @@ plugins {
 }
 
 group = 'com.github.koros'
-version = '1.1.0-SNAPSHOT'
+version = findProperty('VERSION_NAME') ?: System.getenv('RELEASE_VERSION') ?: System.getenv('VERSION') ?: '1.1.0-SNAPSHOT'
