@@ -103,12 +103,16 @@ def androidJarProvider = providers.provider {
     def androidJar = candidates.find { it.exists() } ?: candidates.first()
     androidJar.absolutePath
 }
+def metalavaJavaLauncherProvider = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(21)
+}
 
 tasks.register('generateApi', JavaExec) {
     group = 'verification'
     description = 'Generate the public API signature file for the Android library.'
     dependsOn 'compileReleaseKotlin', 'compileReleaseJavaWithJavac'
 
+    javaLauncher = metalavaJavaLauncherProvider
     classpath = configurations.metalava
     mainClass = 'com.android.tools.metalava.Driver'
     doFirst {
@@ -128,6 +132,7 @@ tasks.register('checkApi', JavaExec) {
     description = 'Verify the public API signature file is up to date.'
     dependsOn 'compileReleaseKotlin', 'compileReleaseJavaWithJavac'
 
+    javaLauncher = metalavaJavaLauncherProvider
     classpath = configurations.metalava
     mainClass = 'com.android.tools.metalava.Driver'
     doFirst {
