@@ -38,18 +38,6 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
      * @param key   The key identifying the grid section.
      */
     public void bind(int cols, List<?> items, K key) {
-        bind(cols, items, key, null);
-    }
-
-    /**
-     * Binds data to the ViewHolder.
-     *
-     * @param cols                  The number of columns in the grid.
-     * @param items                 The list of items to be displayed in the grid.
-     * @param key                   The key identifying the grid section.
-     * @param gridItemClickListener Listener invoked when a grid cell is clicked.
-     */
-    public void bind(int cols, List<?> items, K key, OnGridItemClickListener<K> gridItemClickListener) {
         // if the row belongs to a different category, remove all child views
         String gridCategoryTag = "grid_section_" + key.hashCode();
         if (!gridCategoryTag.equals(parentView.getTag())) {
@@ -74,13 +62,6 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
             if (i < items.size()) {
                 gridContainerView.setVisibility(View.VISIBLE);
                 Object item = items.get(i);
-                if (gridItemClickListener != null) {
-                    gridContainerView.setOnClickListener(view -> gridItemClickListener.onGridItemClick(key, item));
-                    gridContainerView.setClickable(true);
-                } else {
-                    gridContainerView.setOnClickListener(null);
-                    gridContainerView.setClickable(false);
-                }
                 GridCellViewHolder vh = gridContainerView.viewHolder;
                 if (vh != null) {
                     vh.bind(item);
@@ -88,8 +69,6 @@ public class GridRecyclerViewHolder<K> extends RecyclerView.ViewHolder {
             } else {
                 // set the container view to invisible, there isn't data to bind
                 gridContainerView.setVisibility(View.INVISIBLE);
-                gridContainerView.setOnClickListener(null);
-                gridContainerView.setClickable(false);
             }
         }
     }

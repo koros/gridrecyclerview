@@ -23,7 +23,6 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     private Map<K, GridDescriptor<?>> gridItems = new HashMap<>();
     private boolean showHeadersForEmptySections = false;
     private final GridRecyclerViewHelper gridRecyclerViewHelper;
-    private OnGridItemClickListener<K> gridItemClickListener;
     private GridLayoutMetadata<K> layoutMetadata;
 
     /**
@@ -33,18 +32,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
      */
     @SuppressWarnings("unused")
     public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper) {
-        this(gridRecyclerViewHelper, new HashMap<>(), false, null);
-    }
-
-    /**
-     * Constructor for GridRecyclerViewAdapter with an item click listener.
-     *
-     * @param gridRecyclerViewHelper An instance of GridRecyclerViewHelper.
-     * @param gridItemClickListener  Listener invoked when a grid cell is clicked.
-     */
-    @SuppressWarnings("unused")
-    public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, OnGridItemClickListener<K> gridItemClickListener) {
-        this(gridRecyclerViewHelper, new HashMap<>(), false, gridItemClickListener);
+        this(gridRecyclerViewHelper, new HashMap<>(), false);
     }
 
     /**
@@ -55,19 +43,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
      */
     @SuppressWarnings("unused")
     public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, boolean showHeadersForEmptySections) {
-        this(gridRecyclerViewHelper, new HashMap<>(), showHeadersForEmptySections, null);
-    }
-
-    /**
-     * Constructor for GridRecyclerViewAdapter with an option to show headers for empty sections and an item click listener.
-     *
-     * @param gridRecyclerViewHelper      An instance of GridRecyclerViewHelper.
-     * @param showHeadersForEmptySections True to show headers for empty sections, false otherwise.
-     * @param gridItemClickListener       Listener invoked when a grid cell is clicked.
-     */
-    @SuppressWarnings("unused")
-    public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, boolean showHeadersForEmptySections, OnGridItemClickListener<K> gridItemClickListener) {
-        this(gridRecyclerViewHelper, new HashMap<>(), showHeadersForEmptySections, gridItemClickListener);
+        this(gridRecyclerViewHelper, new HashMap<>(), showHeadersForEmptySections);
     }
 
     /**
@@ -78,19 +54,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
      */
     @SuppressWarnings("unused")
     public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, Map<K, GridDescriptor<?>> gridItems) {
-        this(gridRecyclerViewHelper, gridItems, false, null);
-    }
-
-    /**
-     * Constructor for GridRecyclerViewAdapter with initial grid items and an item click listener.
-     *
-     * @param gridRecyclerViewHelper An instance of GridRecyclerViewHelper.
-     * @param gridItems              Initial grid items to be displayed.
-     * @param gridItemClickListener  Listener invoked when a grid cell is clicked.
-     */
-    @SuppressWarnings("unused")
-    public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, Map<K, GridDescriptor<?>> gridItems, OnGridItemClickListener<K> gridItemClickListener) {
-        this(gridRecyclerViewHelper, gridItems, false, gridItemClickListener);
+        this(gridRecyclerViewHelper, gridItems, false);
     }
 
     /**
@@ -101,23 +65,10 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
      * @param showHeadersForEmptySections      True to show headers for empty sections, false otherwise.
      */
     public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, Map<K, GridDescriptor<?>> gridItems, boolean showHeadersForEmptySections) {
-        this(gridRecyclerViewHelper, gridItems, showHeadersForEmptySections, null);
-    }
-
-    /**
-     * Constructor for GridRecyclerViewAdapter with initial grid items, an option to show headers for empty sections, and an item click listener.
-     *
-     * @param gridRecyclerViewHelper      An instance of GridRecyclerViewHelper.
-     * @param gridItems                   Initial grid items to be displayed.
-     * @param showHeadersForEmptySections True to show headers for empty sections, false otherwise.
-     * @param gridItemClickListener       Listener invoked when a grid cell is clicked.
-     */
-    public GridRecyclerViewAdapter(GridRecyclerViewHelper gridRecyclerViewHelper, Map<K, GridDescriptor<?>> gridItems, boolean showHeadersForEmptySections, OnGridItemClickListener<K> gridItemClickListener) {
         super();
         this.gridRecyclerViewHelper = gridRecyclerViewHelper;
         this.gridItems = gridItems;
         this.showHeadersForEmptySections = showHeadersForEmptySections;
-        this.gridItemClickListener = gridItemClickListener;
         initializeGridMetaData();
     }
 
@@ -182,7 +133,7 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
         assert gridItem != null;
         List<?> subList = createSublist(gridItem.getItems(), pos.start, pos.end);
         GridRecyclerViewHolder vh = (GridRecyclerViewHolder) holder;
-        vh.bind(gridItem.getNumberOfColumns(), subList, pos.key, gridItemClickListener);
+        vh.bind(gridItem.getNumberOfColumns(), subList, pos.key);
     }
 
     /**
@@ -240,17 +191,6 @@ public class GridRecyclerViewAdapter<K> extends RecyclerView.Adapter<RecyclerVie
     public void setShowHeadersForEmptySections(boolean showHeadersForEmptySections) {
         this.showHeadersForEmptySections = showHeadersForEmptySections;
         initializeGridMetaData();
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Sets the listener invoked when a grid cell is clicked.
-     *
-     * @param gridItemClickListener Listener invoked when a grid cell is clicked.
-     */
-    @SuppressWarnings("unused")
-    public void setGridItemClickListener(OnGridItemClickListener<K> gridItemClickListener) {
-        this.gridItemClickListener = gridItemClickListener;
         notifyDataSetChanged();
     }
 }

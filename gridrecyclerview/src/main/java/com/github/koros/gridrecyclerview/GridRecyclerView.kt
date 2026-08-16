@@ -1,6 +1,5 @@
 package com.github.koros.gridrecyclerview
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,35 +30,6 @@ fun <K> GridRecyclerView(
     headerContent: @Composable LazyItemScope.(headerItem: K) -> Unit,
     gridItemContent: @Composable (sectionKey: K, item: Any?) -> Unit
 ) {
-    GridRecyclerView(
-        gridItems = gridItems,
-        modifier = modifier,
-        showHeadersForEmptySections = showHeadersForEmptySections,
-        contentPadding = contentPadding,
-        verticalArrangement = verticalArrangement,
-        horizontalArrangement = horizontalArrangement,
-        headerContent = headerContent,
-        gridItemContent = gridItemContent,
-        onGridItemClick = null
-    )
-}
-
-/**
- * Compose-first renderer for sectioned grids with headers, per-section column counts,
- * and section-aware grid cell clicks.
- */
-@Composable
-fun <K> GridRecyclerView(
-    gridItems: Map<K, GridDescriptor<*>>,
-    modifier: Modifier = Modifier,
-    showHeadersForEmptySections: Boolean = false,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(12.dp),
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(12.dp),
-    headerContent: @Composable LazyItemScope.(headerItem: K) -> Unit,
-    gridItemContent: @Composable (sectionKey: K, item: Any?) -> Unit,
-    onGridItemClick: ((sectionKey: K, item: Any?) -> Unit)?
-) {
     val metadata = remember(gridItems, showHeadersForEmptySections) {
         GridLayoutMetadata.from(gridItems, showHeadersForEmptySections)
     }
@@ -88,7 +58,6 @@ fun <K> GridRecyclerView(
                     gridItems = gridItems,
                     itemPosition = itemPosition,
                     horizontalArrangement = horizontalArrangement,
-                    onGridItemClick = onGridItemClick,
                     gridItemContent = gridItemContent
                 )
             }
@@ -101,7 +70,6 @@ private fun <K> GridRow(
     gridItems: Map<K, GridDescriptor<*>>,
     itemPosition: ItemsPosition<K>,
     horizontalArrangement: Arrangement.Horizontal,
-    onGridItemClick: ((sectionKey: K, item: Any?) -> Unit)?,
     gridItemContent: @Composable (sectionKey: K, item: Any?) -> Unit
 ) {
     val descriptor = gridItems[itemPosition.key] ?: return
@@ -114,12 +82,7 @@ private fun <K> GridRow(
         repeat(descriptor.numberOfColumns) { column ->
             if (column < rowItems.size) {
                 val item = rowItems[column]
-                val clickModifier = if (onGridItemClick != null) {
-                    Modifier.clickable { onGridItemClick.invoke(itemPosition.key, item) }
-                } else {
-                    Modifier
-                }
-                Box(modifier = Modifier.weight(1f).then(clickModifier)) {
+                Box(modifier = Modifier.weight(1f)) {
                     gridItemContent(itemPosition.key, item)
                 }
             } else {

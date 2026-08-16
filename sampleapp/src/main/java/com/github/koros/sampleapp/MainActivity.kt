@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -82,27 +83,39 @@ private fun SampleGridScreen(gridItems: Map<GridHeader, GridDescriptor<*>>) {
         },
         gridItemContent = { header, item ->
             when (header.key) {
-                HeaderKey.GENRE -> GenreCard(item as Genre)
-                HeaderKey.MOVIE -> MovieCard(item as Movie)
-                HeaderKey.ACTOR -> ActorCard(item as Actor)
+                HeaderKey.GENRE -> {
+                    val genre = item as Genre
+                    GenreCard(
+                        genre = genre,
+                        modifier = Modifier.clickable { showSelection(context, header, genre.name) }
+                    )
+                }
+                HeaderKey.MOVIE -> {
+                    val movie = item as Movie
+                    MovieCard(
+                        movie = movie,
+                        modifier = Modifier.clickable { showSelection(context, header, movie.name) }
+                    )
+                }
+                HeaderKey.ACTOR -> {
+                    val actor = item as Actor
+                    ActorCard(
+                        actor = actor,
+                        modifier = Modifier.clickable { showSelection(context, header, actor.name) }
+                    )
+                }
                 else -> Text(text = item.toString())
             }
-        },
-        onGridItemClick = { header, item ->
-            Toast.makeText(
-                context,
-                "${header.header}: ${itemLabel(item)}",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     )
 }
 
-private fun itemLabel(item: Any?): String = when (item) {
-    is Actor -> item.name
-    is Genre -> item.name
-    is Movie -> item.name
-    else -> item.toString()
+private fun showSelection(context: android.content.Context, header: GridHeader, itemName: String) {
+    Toast.makeText(
+        context,
+        "${header.header}: $itemName",
+        Toast.LENGTH_SHORT
+    ).show()
 }
 
 @Composable
@@ -125,8 +138,8 @@ private fun SectionHeader(header: GridHeader) {
 }
 
 @Composable
-private fun GenreCard(genre: Genre) {
-    CardShell {
+private fun GenreCard(genre: Genre, modifier: Modifier = Modifier) {
+    CardShell(modifier = modifier) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             NamedImage(
                 name = genre.image,
@@ -149,18 +162,18 @@ private fun GenreCard(genre: Genre) {
 }
 
 @Composable
-private fun MovieCard(movie: Movie) {
-    PosterCard(title = movie.name, imageName = movie.cover)
+private fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
+    PosterCard(title = movie.name, imageName = movie.cover, modifier = modifier)
 }
 
 @Composable
-private fun ActorCard(actor: Actor) {
-    PosterCard(title = actor.name, imageName = actor.image)
+private fun ActorCard(actor: Actor, modifier: Modifier = Modifier) {
+    PosterCard(title = actor.name, imageName = actor.image, modifier = modifier)
 }
 
 @Composable
-private fun PosterCard(title: String, imageName: String) {
-    CardShell {
+private fun PosterCard(title: String, imageName: String, modifier: Modifier = Modifier) {
+    CardShell(modifier = modifier) {
         NamedImage(
             name = imageName,
             contentDescription = title,
@@ -180,9 +193,9 @@ private fun PosterCard(title: String, imageName: String) {
 }
 
 @Composable
-private fun CardShell(content: @Composable () -> Unit) {
+private fun CardShell(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)

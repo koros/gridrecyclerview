@@ -17,17 +17,12 @@ package com.github.koros.gridrecyclerview {
   public class GridRecyclerViewAdapter<K> extends androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder> {
     ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper);
     ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, boolean);
-    ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, boolean, com.github.koros.gridrecyclerview.OnGridItemClickListener<K>);
-    ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, com.github.koros.gridrecyclerview.OnGridItemClickListener<K>);
     ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>);
     ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>, boolean);
-    ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>, boolean, com.github.koros.gridrecyclerview.OnGridItemClickListener<K>);
-    ctor public GridRecyclerViewAdapter(com.github.koros.gridrecyclerview.GridRecyclerViewHelper, java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>, com.github.koros.gridrecyclerview.OnGridItemClickListener<K>);
     method public int getItemCount();
     method public boolean isHeaderPosition(int);
     method public void onBindViewHolder(@NonNull androidx.recyclerview.widget.RecyclerView.ViewHolder, int);
     method @NonNull public androidx.recyclerview.widget.RecyclerView.ViewHolder onCreateViewHolder(@NonNull android.view.ViewGroup, int);
-    method public void setGridItemClickListener(com.github.koros.gridrecyclerview.OnGridItemClickListener<K>);
     method public void setGridItems(java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>>);
     method public void setShowHeadersForEmptySections(boolean);
   }
@@ -41,12 +36,10 @@ package com.github.koros.gridrecyclerview {
 
   public class GridRecyclerViewHolder<K> extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
     method public void bind(int, java.util.List<?>, K);
-    method public void bind(int, java.util.List<?>, K, com.github.koros.gridrecyclerview.OnGridItemClickListener<K>);
   }
 
   public final class GridRecyclerViewKt {
     method @KotlinOnly @androidx.compose.runtime.Composable public static <K> void GridRecyclerView(java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>> gridItems, androidx.compose.ui.Modifier modifier, boolean showHeadersForEmptySections, androidx.compose.foundation.layout.PaddingValues contentPadding, androidx.compose.foundation.layout.Arrangement.Vertical verticalArrangement, androidx.compose.foundation.layout.Arrangement.Horizontal horizontalArrangement, kotlin.jvm.functions.Function2<androidx.compose.foundation.lazy.LazyItemScope,K,kotlin.Unit> headerContent, kotlin.jvm.functions.Function2<K,java.lang.Object,kotlin.Unit> gridItemContent);
-    method @KotlinOnly @androidx.compose.runtime.Composable public static <K> void GridRecyclerView(java.util.Map<K,com.github.koros.gridrecyclerview.GridDescriptor<?>> gridItems, androidx.compose.ui.Modifier modifier, boolean showHeadersForEmptySections, androidx.compose.foundation.layout.PaddingValues contentPadding, androidx.compose.foundation.layout.Arrangement.Vertical verticalArrangement, androidx.compose.foundation.layout.Arrangement.Horizontal horizontalArrangement, kotlin.jvm.functions.Function2<androidx.compose.foundation.lazy.LazyItemScope,K,kotlin.Unit> headerContent, kotlin.jvm.functions.Function2<K,java.lang.Object,kotlin.Unit> gridItemContent, kotlin.jvm.functions.Function2<K,java.lang.Object,kotlin.Unit> onGridItemClick);
   }
 
   public class GridUtils {
@@ -67,10 +60,6 @@ package com.github.koros.gridrecyclerview {
     method public void setItemType(int);
     method public void setKey(K);
     method public void setStart(int);
-  }
-
-  public interface OnGridItemClickListener<K> {
-    method public void onGridItemClick(K, Object);
   }
 
 }
