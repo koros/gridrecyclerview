@@ -34,9 +34,51 @@ public class GridUtilsTest {
     }
 
     @Test
+    public void getItemReturnsUntypedItem() {
+        Map<String, GridDescriptor<?>> sections = new LinkedHashMap<>();
+        sections.put("letters", new GridDescriptor<>(2, Arrays.asList("A", "B")));
+
+        String item = GridUtils.getItem(sections, "letters", 0);
+
+        assertEquals("A", item);
+    }
+
+    @Test
+    public void getItemFailsForMissingKey() {
+        Map<String, GridDescriptor<?>> sections = new LinkedHashMap<>();
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> GridUtils.getItem(sections, "missing", 0)
+        );
+    }
+
+    @Test
+    public void getItemFailsForOutOfBoundsIndex() {
+        Map<String, GridDescriptor<?>> sections = new LinkedHashMap<>();
+        sections.put("letters", new GridDescriptor<>(2, Collections.singletonList("A")));
+
+        assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> GridUtils.getItem(sections, "letters", 1, String.class)
+        );
+        assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> GridUtils.getItem(sections, "letters", -1)
+        );
+    }
+
+    @Test
     public void createSublistClampsBounds() {
         List<?> sublist = GridUtils.createSublist(Arrays.asList("A", "B", "C"), -1, 5);
 
         assertEquals(Arrays.asList("A", "B", "C"), sublist);
+    }
+
+    @Test
+    public void createSublistReturnsRequestedRange() {
+        List<?> sublist = GridUtils.createSublist(Arrays.asList("A", "B", "C", "D"), 1, 3);
+
+        assertEquals(Arrays.asList("B", "C"), sublist);
     }
 }
