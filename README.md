@@ -81,6 +81,25 @@ GridRecyclerView(
 )
 ```
 
+Handle grid cell clicks with `onGridItemClick`:
+
+```kotlin
+GridRecyclerView(
+    gridItems = gridItems,
+    headerContent = { header ->
+        Text(text = header.header)
+    },
+    gridItemContent = { section, item ->
+        MovieCard(item as Movie)
+    },
+    onGridItemClick = { section, item ->
+        // section identifies the clicked section, item is the clicked cell data
+    }
+)
+```
+
+Header and subheader clicks remain owned by your custom header UI. In Compose, add `Modifier.clickable` inside `headerContent` to the exact title, subtitle, icon, or action you want to handle. In the legacy RecyclerView API, set those click listeners inside your header `ViewHolder`.
+
 See the Compose sample in [MainActivity.kt](sampleapp/src/main/java/com/github/koros/sampleapp/MainActivity.kt).
 
 ## Legacy RecyclerView API
@@ -93,6 +112,19 @@ Existing RecyclerView integrations can continue to use:
 - `GridDescriptor`
 
 The legacy API is covered by the checked-in API signature file and remains visible in [api/current.txt](api/current.txt).
+
+Legacy grid cell clicks can be handled with `OnGridItemClickListener`:
+
+```java
+GridRecyclerViewAdapter<GridHeader> adapter = new GridRecyclerViewAdapter<>(
+    helper,
+    gridItems,
+    false,
+    (section, item) -> {
+        // handle clicked grid cell
+    }
+);
+```
 
 ## Build And Test
 

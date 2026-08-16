@@ -1,6 +1,7 @@
 package com.github.koros.sampleapp
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -68,6 +69,8 @@ private fun sampleGridItems(): Map<GridHeader, GridDescriptor<*>> = linkedMapOf(
 
 @Composable
 private fun SampleGridScreen(gridItems: Map<GridHeader, GridDescriptor<*>>) {
+    val context = LocalContext.current
+
     GridRecyclerView(
         gridItems = gridItems,
         modifier = Modifier.fillMaxSize(),
@@ -84,8 +87,22 @@ private fun SampleGridScreen(gridItems: Map<GridHeader, GridDescriptor<*>>) {
                 HeaderKey.ACTOR -> ActorCard(item as Actor)
                 else -> Text(text = item.toString())
             }
+        },
+        onGridItemClick = { header, item ->
+            Toast.makeText(
+                context,
+                "${header.header}: ${itemLabel(item)}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     )
+}
+
+private fun itemLabel(item: Any?): String = when (item) {
+    is Actor -> item.name
+    is Genre -> item.name
+    is Movie -> item.name
+    else -> item.toString()
 }
 
 @Composable
